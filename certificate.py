@@ -9,15 +9,23 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.lib.utils import ImageReader
 
+# Import configuration
+try:
+    import config
+except ImportError:
+    print("Error: config.py not found!")
+    print("Please copy config.example.py to config.py and configure it.")
+    sys.exit(1)
 
-FONT_PATH = "./Monotype Corsiva/Monotype-Corsiva-Regular.ttf"
-FONT_NAME = "Monotype Corsiva"
-FONT_COLOR = (17/255, 74/255, 156/255)
-FONT_SIZE = 23
-MAX_NAME_WIDTH = 500  # in points
+# Load configuration values
+FONT_PATH = config.FONT_PATH
+FONT_NAME = config.FONT_NAME
+FONT_COLOR = config.FONT_COLOR
+FONT_SIZE = config.FONT_SIZE
+MAX_NAME_WIDTH = config.MAX_NAME_WIDTH
 
-template_path = "./c1.pdf"
-output_folder = "runner-up"
+template_path = config.TEMPLATE_PATH_WITH_QR
+output_folder = config.OUTPUT_FOLDER_WITH_QR
 os.makedirs(output_folder, exist_ok=True)
 
 # Register font once (for all processes)
@@ -35,12 +43,12 @@ def calculate_font_size(name, canvas_obj, max_width=MAX_NAME_WIDTH, initial_size
 
 
 
-QR_FOLDER = "./qr_codes"  # Add this constant where other constants are defined
+QR_FOLDER = config.QR_FOLDER
 
 
 
 def generate_certificate(name):
-    name = name.strip().title()
+    name = name.strip().title() if config.AUTO_TITLE_CASE else name.strip()
     base_output_path = os.path.join(output_folder, f"{name}.pdf")
     output_path = base_output_path
     counter = 1
@@ -61,14 +69,15 @@ def generate_certificate(name):
     can.setFont(FONT_NAME, name_font_size)
     can.setFillColorRGB(*FONT_COLOR)
     #### !THIS IS FOR NAME (x,y)
-    can.drawCentredString(410, 280, name)  # center at x=350, y=225
+    can.drawCentredString(*config.NAME_POSITION_WITH_QR, name)
 
     qr_path = os.path.join(QR_FOLDER, f"{name}.png")
     if os.path.exists(qr_path):
         # Adjust these coordinates to match your bottom box position
         # QR size is set to 100x100 points, adjust as needed
         ###! THIS FOR QR (x,y)
-        can.drawImage(ImageReader(qr_path), 228, 87, width=75, height=75)
+        can.drawImage(ImageReader(qr_path), config.QR_POSITION_X, config.QR_POSITION_Y, 
+                      width=config.QR_WIDTH, height=config.QR_HEIGHT)
     else:
         print(f"\nWarning: QR code not found for {name}")
 
@@ -87,14 +96,20 @@ def generate_certificate(name):
 
 
 def main():
-    with open("./names.txt", "r") as f:
+    with open(config.NAMES_FILE, "r") as f:
         names = f.readlines()
 
     print(f"Generating certificates for {len(names)} people...")
 
-    with ProcessPoolExecutor() as executor:
-        for i, name in enumerate(executor.map(generate_certificate, names), 1):
-            sys.stdout.write(f"\r[{i}/{len(names)}] Processed: {name}.pdf")
+    if config.ENABLE_PARALLEL_PROCESSING:
+        with ProcessPoolExecutor() as executor:
+            for i, name in enumerate(executor.map(generate_certificate, names), 1):
+                sys.stdout.write(f"\r[{i}/{len(names)}] Processed: {name}.pdf")
+                sys.stdout.flush()
+    else:
+        for i, name in enumerate(names, 1):
+            processed = generate_certificate(name)
+            sys.stdout.write(f"\r[{i}/{len(names)}] Processed: {processed}.pdf")
             sys.stdout.flush()
 
     print("\n✅ All certificates have been generated successfully!")

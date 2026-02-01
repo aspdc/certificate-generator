@@ -1,6 +1,39 @@
+# Python
 venv
-qr_codes
-certificates
+.venv
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Certificate Generator specific
+qr_codes/
+certificates/
+runner-up/
+participants-odoo/
+winners/
+
+# Input files (may contain sensitive data)
 names.txt
-*.pdf
 certi.json
+
+# Output files
+*.pdf
+!c1.pdf
+!c2.pdf
+!p1.pdf
+
+# Local configuration (copy from config.example.py)
+config.py
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db

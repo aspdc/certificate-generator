@@ -1,5 +1,14 @@
 import os
+import sys
 from PyPDF2 import PdfReader, PdfWriter
+
+# Import configuration
+try:
+    import config
+except ImportError:
+    print("Error: config.py not found!")
+    print("Please copy config.example.py to config.py and configure it.")
+    sys.exit(1)
 
 def merge_pdfs(source_folder, output_filename):
     if not os.path.exists(source_folder):
@@ -37,6 +46,6 @@ def merge_pdfs(source_folder, output_filename):
     print(f"\n✅ All {count} PDFs merged into '{output_path}'")
 
 if __name__ == "__main__":
-    SOURCE_FOLDER = "./participants-odoo"
-    OUTPUT_FILE = "merged_participants_odoo.pdf"
+    SOURCE_FOLDER = config.MERGE_SOURCE_FOLDER
+    OUTPUT_FILE = config.MERGE_OUTPUT_FILE
     merge_pdfs(SOURCE_FOLDER, OUTPUT_FILE)
