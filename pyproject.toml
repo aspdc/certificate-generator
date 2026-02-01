@@ -13,7 +13,3 @@ dependencies = [
 
 [project.urls]
 Repository = "https://github.com/aspdc/certificate-generator"
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"

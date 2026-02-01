@@ -16,10 +16,9 @@ cp config.example.py config.py
 
 # Generate
 source .venv/bin/activate
-python qr.py              # Generate QR codes (if needed)
-python certificate.py      # Certificates with QR
-python certificates-no-qr.py  # Certificates without QR
-python merge_pdfs.py      # Merge all PDFs (optional)
+python qr.py       # Generate QR codes (if using option 1)
+python generate.py # Select 1 (with QR) or 2 (without QR)
+python merge_pdfs.py  # Merge all PDFs (optional)
 ```
 
 ## Installation
@@ -39,7 +38,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh  # macOS/Linux
 # Install dependencies
 uv venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
-uv pip install -e .
+uv pip install -r deps.txt
 ```
 
 ## Configuration
@@ -122,11 +121,7 @@ Jane Smith
 ## Scripts
 
 - `qr.py` - Generate QR codes from certi.json
-- `certificate.py` - Generate certificates WITH QR codes
-- `certificates-no-qr.py` - Generate certificates WITHOUT QR codes
-- `merge_pdfs.py` - Merge all PDFs into one file
-
-## Positioning Guide
+- `generate.py` - Generate certificates (prompts for with/without QR)
 
 PDF coordinates start from **bottom-left** (0,0):
 
@@ -149,4 +144,4 @@ PDF coordinates start from **bottom-left** (0,0):
 ---
 
 **Repository**: https://github.com/aspdc/certificate-generator  
-**Maintained by**: ASPDC Team
+**Maintained by**: ni3rav, claude sonnet 4.5 and gemini 3 pro

@@ -43,7 +43,7 @@ def merge_pdfs(source_folder, output_filename):
     with open(output_path, 'wb') as out_file:
         pdf_writer.write(out_file)
     
-    print(f"\n✅ All {count} PDFs merged into '{output_path}'")
+    print(f"\nAll {count} PDFs merged into '{output_path}'")
 
 if __name__ == "__main__":
     SOURCE_FOLDER = config.MERGE_SOURCE_FOLDER

@@ -96,7 +96,7 @@ def main():
             sys.stdout.write(f"\r[{i}/{len(names)}] Processed: {processed}.pdf")
             sys.stdout.flush()
 
-    print("\n✅ All certificates have been generated successfully!")
+    print("\nAll certificates have been generated successfully!")
 
 
 if __name__ == "__main__":
