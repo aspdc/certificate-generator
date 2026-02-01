@@ -1,0 +1,6 @@
+venv
+qr_codes
+certificates
+names.txt
+*.pdf
+certi.json
