@@ -55,10 +55,11 @@ if not exist "config.py" (
     copy config.example.py config.py
     echo [OK] config.py created
     echo.
-    echo IMPORTANT: Please edit config.py to match your setup:
-    echo    - Verify template paths ^(c1.pdf, p1.pdf^)
-    echo    - Adjust name and QR code positions
-    echo    - Check font path
+    echo IMPORTANT: Please edit config.py to configure:
+    echo    - Template PDF paths
+    echo    - Font file path
+    echo    - Name and QR code positions
+    echo    - Input file paths
 ) else (
     echo [OK] config.py already exists
 )
@@ -75,30 +76,8 @@ echo [OK] Directories created
 REM Check for required files
 echo.
 echo Checking for required files...
-
-set MISSING=0
-
-if not exist "c1.pdf" (
-    echo    - c1.pdf ^(certificate template with QR^)
-    set MISSING=1
-)
-
-if not exist "p1.pdf" (
-    echo    - p1.pdf ^(certificate template without QR^)
-    set MISSING=1
-)
-
-if not exist "Monotype Corsiva\Monotype-Corsiva-Regular.ttf" (
-    echo    - Monotype Corsiva\Monotype-Corsiva-Regular.ttf ^(font file^)
-    set MISSING=1
-)
-
-if %MISSING%==1 (
-    echo.
-    echo WARNING: Please add the missing files before generating certificates.
-) else (
-    echo [OK] All required files present
-)
+echo Note: File paths are configurable in config.py
+echo [OK] Setup will create sample input files
 
 REM Create sample input files if they don't exist
 echo.
@@ -133,11 +112,11 @@ echo.
 echo Setup complete!
 echo.
 echo Next steps:
-echo 1. Edit config.py to match your setup
-echo 2. Add your certificate PDF templates ^(c1.pdf, p1.pdf^)
-echo 3. Ensure font file is in place
-echo 4. Update names.txt with actual participant names
-echo 5. Update certi.json with actual verification links ^(if using QR codes^)
+echo 1. Edit config.py to set your template paths, font, and positions
+echo 2. Add your certificate PDF templates at the paths specified in config.py
+echo 3. Add your font file at the path specified in config.py
+echo 4. Update your input file ^(default: names.txt^) with participant names
+echo 5. Update your JSON file ^(default: certi.json^) with verification links ^(if using QR^)
 echo.
 echo To generate certificates:
 echo   .venv\Scripts\activate.bat

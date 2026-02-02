@@ -52,10 +52,11 @@ if [ ! -f "config.py" ]; then
     cp config.example.py config.py
     echo "[OK] config.py created"
     echo ""
-    echo "IMPORTANT: Please edit config.py to match your setup:"
-    echo "   - Verify template paths (c1.pdf, p1.pdf)"
-    echo "   - Adjust name and QR code positions"
-    echo "   - Check font path"
+    echo "IMPORTANT: Please edit config.py to configure:"
+    echo "   - Template PDF paths"
+    echo "   - Font file path"
+    echo "   - Name and QR code positions"
+    echo "   - Input file paths"
 else
     echo "[OK] config.py already exists"
 fi
@@ -69,32 +70,8 @@ echo "[OK] Directories created"
 # Check for required files
 echo ""
 echo "Checking for required files..."
-
-MISSING_FILES=()
-
-if [ ! -f "c1.pdf" ]; then
-    MISSING_FILES+=("c1.pdf (certificate template with QR)")
-fi
-
-if [ ! -f "p1.pdf" ]; then
-    MISSING_FILES+=("p1.pdf (certificate template without QR)")
-fi
-
-if [ ! -f "Monotype Corsiva/Monotype-Corsiva-Regular.ttf" ]; then
-    MISSING_FILES+=("Monotype Corsiva/Monotype-Corsiva-Regular.ttf (font file)")
-fi
-
-if [ ${#MISSING_FILES[@]} -gt 0 ]; then
-    echo ""
-    echo "WARNING: Missing required files:"
-    for file in "${MISSING_FILES[@]}"; do
-        echo "   - $file"
-    done
-    echo ""
-    echo "Please add these files before generating certificates."
-else
-    echo "[OK] All required files present"
-fi
+echo "Note: File paths are configurable in config.py"
+echo "[OK] Setup will create sample input files"
 
 # Create sample input files if they don't exist
 echo ""
@@ -129,11 +106,11 @@ echo ""
 echo "Setup complete!"
 echo ""
 echo "Next steps:"
-echo "1. Edit config.py to match your setup"
-echo "2. Add your certificate PDF templates (c1.pdf, p1.pdf)"
-echo "3. Ensure font file is in place"
-echo "4. Update names.txt with actual participant names"
-echo "5. Update certi.json with actual verification links (if using QR codes)"
+echo "1. Edit config.py to set your template paths, font, and positions"
+echo "2. Add your certificate PDF templates at the paths specified in config.py"
+echo "3. Add your font file at the path specified in config.py"
+echo "4. Update your input file (default: names.txt) with participant names"
+echo "5. Update your JSON file (default: certi.json) with verification links (if using QR)"
 echo ""
 echo "To generate certificates:"
 echo "  source .venv/bin/activate"
