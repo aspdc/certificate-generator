@@ -108,6 +108,16 @@ if not exist "certi.json" (
     echo [OK] Sample certi.json created ^(edit before generating QR codes^)
 )
 
+if not exist "sr-no.txt" (
+    echo Creating sample sr-no.txt...
+    (
+        echo 001
+        echo 002
+        echo 003
+    ) > sr-no.txt
+    echo [OK] Sample sr-no.txt created ^(one serial number per line, matching names.txt order^)
+)
+
 echo.
 echo Setup complete!
 echo.

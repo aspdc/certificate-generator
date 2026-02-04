@@ -17,6 +17,7 @@ winners/
 # Input files (may contain sensitive data)
 names.txt
 certi.json
+sr-no.txt
 
 # Output files
 *.pdf

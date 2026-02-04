@@ -37,7 +37,8 @@ def calculate_font_size(name, canvas_obj, max_width=MAX_NAME_WIDTH, initial_size
     return initial_size
 
 
-def generate_certificate_with_qr(name):
+def generate_certificate_with_qr(data):
+    name, serial_number = data
     name = name.strip().title() if config.AUTO_TITLE_CASE else name.strip()
     output_folder = config.OUTPUT_FOLDER_WITH_QR
     template_path = config.TEMPLATE_PATH_WITH_QR
@@ -65,6 +66,12 @@ def generate_certificate_with_qr(name):
     can.setFillColorRGB(*FONT_COLOR)
     can.drawCentredString(*config.NAME_POSITION_WITH_QR, name)
 
+    # Add serial number if position is configured
+    if hasattr(config, 'SERIAL_NUMBER_POSITION_WITH_QR') and config.SERIAL_NUMBER_POSITION_WITH_QR:
+        sr_font_size = getattr(config, 'SERIAL_NUMBER_FONT_SIZE', 10)
+        can.setFont(FONT_NAME, sr_font_size)
+        can.drawString(*config.SERIAL_NUMBER_POSITION_WITH_QR, serial_number.strip())
+
     qr_path = os.path.join(config.QR_FOLDER, f"{name}.png")
     if os.path.exists(qr_path):
         can.drawImage(ImageReader(qr_path), config.QR_POSITION_X, config.QR_POSITION_Y, 
@@ -85,7 +92,8 @@ def generate_certificate_with_qr(name):
     return name
 
 
-def generate_certificate_no_qr(name):
+def generate_certificate_no_qr(data):
+    name, serial_number = data
     name = name.strip().title() if config.AUTO_TITLE_CASE else name.strip()
     output_folder = config.OUTPUT_FOLDER_NO_QR
     template_path = config.TEMPLATE_PATH_NO_QR
@@ -112,6 +120,12 @@ def generate_certificate_no_qr(name):
     can.setFont(FONT_NAME, name_font_size)
     can.setFillColorRGB(*FONT_COLOR)
     can.drawCentredString(*config.NAME_POSITION_NO_QR, name)
+
+    # Add serial number if position is configured
+    if hasattr(config, 'SERIAL_NUMBER_POSITION_NO_QR') and config.SERIAL_NUMBER_POSITION_NO_QR:
+        sr_font_size = getattr(config, 'SERIAL_NUMBER_FONT_SIZE', 10)
+        can.setFont(FONT_NAME, sr_font_size)
+        can.drawString(*config.SERIAL_NUMBER_POSITION_NO_QR, serial_number.strip())
 
     can.save()
     packet.seek(0)
@@ -152,16 +166,38 @@ def main():
     with open(config.NAMES_FILE, "r") as f:
         names = [line for line in f.readlines() if line.strip()]
 
+    # Read serial numbers if file exists
+    serial_numbers_file = getattr(config, 'SERIAL_NUMBERS_FILE', './sr-no.txt')
+    if os.path.exists(serial_numbers_file):
+        with open(serial_numbers_file, "r") as f:
+            serial_numbers = [line for line in f.readlines() if line.strip()]
+        
+        # Ensure we have same number of serial numbers as names
+        if len(serial_numbers) < len(names):
+            print(f"Warning: Only {len(serial_numbers)} serial numbers found for {len(names)} names.")
+            print("Padding with empty serial numbers.")
+            serial_numbers.extend([''] * (len(names) - len(serial_numbers)))
+        elif len(serial_numbers) > len(names):
+            print(f"Warning: {len(serial_numbers)} serial numbers found for {len(names)} names.")
+            print("Using only the first {len(names)} serial numbers.")
+            serial_numbers = serial_numbers[:len(names)]
+    else:
+        # No serial numbers file, use empty strings
+        serial_numbers = [''] * len(names)
+
+    # Create pairs of (name, serial_number)
+    data_pairs = list(zip(names, serial_numbers))
+
     print(f"Found {len(names)} names to process...")
 
     if config.ENABLE_PARALLEL_PROCESSING:
         with ProcessPoolExecutor() as executor:
-            for i, name in enumerate(executor.map(generator_func, names), 1):
+            for i, name in enumerate(executor.map(generator_func, data_pairs), 1):
                 sys.stdout.write(f"\r[{i}/{len(names)}] Processed: {name}.pdf")
                 sys.stdout.flush()
     else:
-        for i, name in enumerate(names, 1):
-            processed = generator_func(name)
+        for i, data in enumerate(data_pairs, 1):
+            processed = generator_func(data)
             sys.stdout.write(f"\r[{i}/{len(names)}] Processed: {processed}.pdf")
             sys.stdout.flush()
 

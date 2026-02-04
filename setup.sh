@@ -102,6 +102,16 @@ EOF
     echo "[OK] Sample certi.json created (edit before generating QR codes)"
 fi
 
+if [ ! -f "sr-no.txt" ]; then
+    echo "Creating sample sr-no.txt..."
+    cat > sr-no.txt << 'EOF'
+001
+002
+003
+EOF
+    echo "[OK] Sample sr-no.txt created (one serial number per line, matching names.txt order)"
+fi
+
 echo ""
 echo "Setup complete!"
 echo ""

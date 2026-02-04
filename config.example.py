@@ -26,6 +26,11 @@ QR_POSITION_Y = 87
 QR_WIDTH = 75
 QR_HEIGHT = 75
 
+# Serial Number Position (optional - set to None to disable)
+SERIAL_NUMBER_POSITION_WITH_QR = (370, 35)  # Default: (370, 35) - set to None to disable
+SERIAL_NUMBER_POSITION_NO_QR = (370, 35)  # Default: (370, 35) - set to None to disable
+SERIAL_NUMBER_FONT_SIZE = 10  # Default: 10
+
 
 # ============================================================================
 # OPTIONAL SETTINGS - Defaults provided
@@ -44,6 +49,7 @@ QR_FOLDER = "./qr_codes"  # Default: "./qr_codes"
 # Input Files (optional - defaults shown)
 NAMES_FILE = "./names.txt"  # Default: "./names.txt"
 PARTICIPANTS_JSON = "./certi.json"  # Default: "./certi.json"
+SERIAL_NUMBERS_FILE = "./sr-no.txt"  # Default: "./sr-no.txt" - one serial number per line
 
 # QR Code Generation (optional - defaults shown)
 OUTPUT_DPI = 300  # Default: 300 DPI for print quality
