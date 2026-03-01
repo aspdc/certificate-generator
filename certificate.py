@@ -63,7 +63,7 @@ def generate_certificate(name):
 
     # Create overlay
     packet = BytesIO()
-    can = canvas.Canvas(packet)
+    can = canvas.Canvas(packet, pagesize=(float(page.mediabox.width), float(page.mediabox.height)))
     name_font_size = calculate_font_size(name, can)
 
     can.setFont(FONT_NAME, name_font_size)
