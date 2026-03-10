@@ -1,4 +1,6 @@
-# Certificate Generator
+# Warden
+
+> Because WE you deserve better certificates, afterall it's an ASPDC event
 
 Generate personalized certificates with optional QR codes for ASPDC events. Supports batch processing, custom fonts, and parallel generation.
 
